@@ -3,6 +3,8 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+
+#Setup our URL to begin our webscrape from Indeed JP
 def get_url(pos,loc):
     template_url = 'https://jp.indeed.com/jobs?q={}&l={}'
     pos = pos.replace(' ', '+')
@@ -11,4 +13,14 @@ def get_url(pos,loc):
     return url
 
 url = get_url('Full-stack Developer', '東京都')
-print(url)
+
+
+# Extract HTML
+
+response = requests.get(url)
+
+soup = BeautifulSoup(response.text, 'html.parser')
+
+#This is going to use the soup object to find all elements that have a div tag, and the given class
+job_cards = soup.find_all('div', 'slider_item')
+

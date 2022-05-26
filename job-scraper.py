@@ -35,4 +35,5 @@ job_title = job_listing_span_tag.get('title')
 
 job_listing_url = 'http://jp.indeed.com' + job_listing_atag.get('href')
 
+company_name = job_card.find('span', 'companyName').text
 

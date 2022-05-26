@@ -41,8 +41,8 @@ job_location = job_card.find('div', 'companyLocation').text
 
 job_snippet = job_card.find('div', 'job-snippet').text.replace('\n', ' ')
 
+#Due to nested tags, dive a bit deeper and exclude everything but the post date
 job_listing_post_date = None
-# job_card.find('span', 'date')
-for x in job_card.find('span', 'date'):
+for posting_date in job_card.find('span', 'date'):
     if not job_card.get('date'):
-        job_listing_post_date = "Posted: " + x.text
+        job_listing_post_date = "Posted: " + posting_date.text

@@ -40,3 +40,9 @@ company_name = job_card.find('span', 'companyName').text
 job_location = job_card.find('div', 'companyLocation').text
 
 job_snippet = job_card.find('div', 'job-snippet').text.replace('\n', ' ')
+
+job_listing_post_date = None
+# job_card.find('span', 'date')
+for x in job_card.find('span', 'date'):
+    if not job_card.get('date'):
+        job_listing_post_date = "Posted: " + x.text

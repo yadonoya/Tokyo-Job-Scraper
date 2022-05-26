@@ -12,11 +12,11 @@ def get_url(pos,loc):
     url = template_url.format(pos, loc)
     return url
 
+#Input parameters for the job title and location we would like to search for
 url = get_url('Full-stack Developer', '東京都')
 
 
 # Extract HTML
-
 response = requests.get(url)
 
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -24,3 +24,10 @@ soup = BeautifulSoup(response.text, 'html.parser')
 #This is going to use the soup object to find all elements that have a div tag, and the given class
 job_cards = soup.find_all('div', 'slider_item')
 
+# Single record/card 
+
+job_card = job_cards[0]
+
+atag = job_card.h2.a.span
+
+print(atag.get('title'))

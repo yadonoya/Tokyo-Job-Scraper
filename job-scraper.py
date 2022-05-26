@@ -28,6 +28,11 @@ job_cards = soup.find_all('div', 'slider_item')
 
 job_card = job_cards[0]
 
-atag = job_card.h2.a.span
+job_listing_atag = job_card.h2.a
+job_listing_span_tag = job_card.h2.a.span
 
-print(atag.get('title'))
+job_title = job_listing_span_tag.get('title')
+
+job_listing_url = 'http://jp.indeed.com' + job_listing_atag.get('href')
+
+

@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime
 import requests
+from time import sleep
+from random import randint
 from bs4 import BeautifulSoup
 
 def get_url(pos,loc):
@@ -38,7 +40,7 @@ def get_job_cards(job_card):
     except AttributeError:
         job_salary = ''
 
-    record = (job_title, company_name, job_location, job_listing_post_date, todays_date, job_snippet, job_salary, job_listing_url)
+    record = (job_title, company_name, job_location, job_salary, job_listing_post_date, todays_date, job_snippet, job_listing_url)
 
     return record
 
@@ -48,7 +50,6 @@ def main_function(job_position):
 
     while True: 
             response = requests.get(url)
-            print(response)
             soup = BeautifulSoup(response.text, 'html.parser')
             job_cards = soup.find_all('div', 'slider_item')
 
@@ -58,9 +59,14 @@ def main_function(job_position):
 
             try:
                 url = 'http://jp.indeed.com' + soup.find('a', {'aria-label': '次へ'}).get('href')
+                delay = randint(1, 10)
+                sleep(delay)
             except AttributeError:
                 break
 
-    return records
+    with open('results.csv', 'w', newline='', encoding='utf-8') as found_jobs:
+        writer = csv.writer(found_jobs)
+        writer.writerow(['Job Title', 'Company', 'Location', 'Salary', 'Posting Date', 'Extract Date', 'Summary', 'Job Url'])
+        writer.writerows(records)
 
-print(main_function('Full-stack Developer'))
+main_function('Full-Stack Developer')

@@ -3,8 +3,11 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+import csv
+from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
 
-#Setup our URL to begin our webscrape from Indeed JP
 def get_url(pos,loc):
     template_url = 'https://jp.indeed.com/jobs?q={}&l={}'
     pos = pos.replace(' ', '+')
@@ -12,19 +15,6 @@ def get_url(pos,loc):
     url = template_url.format(pos, loc)
     return url
 
-#Input parameters for the job title and location we would like to search for
-url = get_url('Full-stack Developer', '東京都')
-
-
-# Extract HTML
-response = requests.get(url)
-
-soup = BeautifulSoup(response.text, 'html.parser')
-
-#This is going to use the soup object to find all elements that have a div tag, and the given class
-job_cards = soup.find_all('div', 'slider_item')
-
-#Function to scrape jobs 
 def get_job_cards(job_card):
     job_listing_atag = job_card.h2.a
     job_listing_span_tag = job_card.h2.a.span
@@ -57,9 +47,25 @@ def get_job_cards(job_card):
 
     return record
 
-#List to store jobs we have scraped
-found_jobs = []
+def main_function(job_position):
+    records = []
+    url = get_url(job_position, '東京都') #Temporarily hard-coded Tokyo as our default search location
 
-for job_card in job_cards:
-    found_job = get_job_cards(job_card) 
-    found_jobs.append(found_job)
+    while True: 
+            response = requests.get(url)
+            print(response)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            job_cards = soup.find_all('div', 'slider_item')
+
+            for job_card in job_cards:
+                record = get_job_cards(job_card)
+                records.append(record)
+
+            try:
+                url = 'http://jp.indeed.com' + soup.find('a', {'aria-label': '次へ'}).get('href')
+            except AttributeError:
+                break
+
+    return records
+
+print(main_function('Full-stack Developer'))

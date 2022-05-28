@@ -3,11 +3,6 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-import csv
-from datetime import datetime
-import requests
-from bs4 import BeautifulSoup
-
 def get_url(pos,loc):
     template_url = 'https://jp.indeed.com/jobs?q={}&l={}'
     pos = pos.replace(' ', '+')

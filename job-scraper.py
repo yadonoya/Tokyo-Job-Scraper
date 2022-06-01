@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime
 import requests
+import json
+from flask import Flask, render_template
 from time import sleep
 from random import randint
 from bs4 import BeautifulSoup
@@ -30,7 +32,7 @@ def get_job_cards(job_card):
 
     #Due to nested tags, dive a bit deeper and exclude everything but the post date
     job_listing_post_date = None
-    for posting_date in job_card.find('span', 'date'):
+    for posting_date in job_card.find('span', 'date'): 
         if not job_card.get('date'):
             job_listing_post_date = "Posted: " + posting_date.text
 
@@ -66,7 +68,7 @@ def main_function(job_position):
 
     with open('results.csv', 'w', newline='', encoding='utf-8') as found_jobs:
         writer = csv.writer(found_jobs)
-        writer.writerow(['Job Title', 'Company', 'Location', 'Salary', 'Posting Date', 'Extract Date', 'Summary', 'Job Url'])
+        writer.writerow(['Job Title', 'Company', 'Location', 'Salary', 'Posting Date', 'Extract Date', 'Summary', 'Job Url']) #This order has to match our record tuple listed above
         writer.writerows(records)
 
 main_function('Full-Stack Developer')

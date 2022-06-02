@@ -10,11 +10,27 @@
   <section class="section">
     <div class="container">
       <h1 class="title">
-        Hello World
+        Haha jobs
       </h1>
-      <p class="subtitle">
-        My first website with <strong>Bulma</strong>!
-      </p>
+      {% block content %}
+      <h1>{% block title %} Found {{ scraped_listings|count }} Listings: {% endblock %}</h1>
+      <div style="width: 75%; margin: auto">
+          {% for listing in scraped_listings %}
+          <div style="padding: 10px; background-color: #EEE; margin: 20px">
+              <p style="font-size: 24px"><b>{{ listing[0] }}</b></p>
+              <p style="font-size: 18px"><b>Company: </b>{{ listing[1] }}</p>
+              <p style="font-size: 18px"><b>Location: </b>{{ listing[2] }}</p>
+                {% if listing[3]|length > 2 %} 
+                  <p style="font-size: 18px"><b>Salary: </b>{{ listing[3] }}</p> 
+                {% else %} 
+                  <p style="font-size: 18px"><b>Salary: </b>N/A</p> 
+                {% endif %}
+              <p style="font-size: 18px"><b>Posted: </b>{{ listing[4] }}</p>
+              <a style="font-size: 18px" href="{{ listing[7] }}">Listing URL</a>
+          </div>
+          {% endfor %}
+      </div>
+      {% endblock %}
     </div>
   </section>
   </body>

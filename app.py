@@ -37,7 +37,7 @@ def find_jobs():
         job_listing_post_date = None
         for posting_date in job_card.find('span', 'date'): 
             if not job_card.get('date'):
-                job_listing_post_date = "Posted: " + posting_date.text
+                job_listing_post_date = posting_date.text
 
         #Error handling for whether or not a salary is posted in the job listing.
         try:
@@ -69,11 +69,12 @@ def find_jobs():
                 except AttributeError:
                     break
 
+        return records
         # with open('results.csv', 'w', newline='', encoding='utf-8') as found_jobs:
         #     writer = csv.writer(found_jobs)
         #     writer.writerow(['Job Title', 'Company', 'Location', 'Salary', 'Posting Date', 'Extract Date', 'Summary', 'Job Url']) #This order has to match our record tuple listed above
         #     writer.writerows(records)
 
-    # main_function('Full-Stack Developer') 
+    scraped_listings = main_function('Full-Stack Developer')
 
-    return render_template('index.html')
+    return render_template('index.html', scraped_listings=scraped_listings)

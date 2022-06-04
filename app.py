@@ -1,15 +1,41 @@
 import csv
 from datetime import datetime
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, url_for, redirect
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 from time import sleep
 from random import randint
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "password"
 
-@app.route('/')
+#Form handling
+class JobFinder(FlaskForm):
+    job = StringField("Search open listings: ", validators=[DataRequired()])
+    submit = SubmitField("Search")
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    job = None
+    form = JobFinder()
+
+    if form.validate_on_submit():
+        job = form.job.data
+        session["job"] = job
+        form.job.data = ''
+        return redirect('results')
+        
+
+    return render_template('index.html', job=job, form=form)
+
+@app.route('/results', methods=['GET', 'POST'])
 def find_jobs():
+    if "job" in session:
+        job = session["job"]
+    
     def get_url(pos,loc):
         template_url = 'https://jp.indeed.com/jobs?q={}&l={}'
         pos = pos.replace(' ', '+')
@@ -75,6 +101,6 @@ def find_jobs():
         #     writer.writerow(['Job Title', 'Company', 'Location', 'Salary', 'Posting Date', 'Extract Date', 'Summary', 'Job Url']) #This order has to match our record tuple listed above
         #     writer.writerows(records)
 
-    scraped_listings = main_function('Full-Stack Developer')
+    scraped_listings = main_function(job) #if still broken, change parameter to 'Full-stack Developer'
 
-    return render_template('index.html', scraped_listings=scraped_listings)
+    return render_template('results.html', scraped_listings=scraped_listings, find_jobs=find_jobs)

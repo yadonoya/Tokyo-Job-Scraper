@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wow jobs!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  </head>
+  <section class="hero is-small is-primary has-background-black ">
+    <div class="hero-body">
+      <p class="title has-text-white-ter">
+        Job Listings in Tokyo
+      </p>
+      <p class="subtitle has-text-white-ter">
+        Find your next job in Tokyo!
+      </p>
+    </div>
+  </section>
+  <body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Job Listings in Tokyo
+      </h1>
+      {% block content %}
+      <h1>{% block title %} Found {{ scraped_listings|count }} Listings: {% endblock %}</h1>
+      <div style="width: 75%; margin: auto">
+          {% for listing in scraped_listings %}
+          <div style="padding: 10px; background-color: #EEE; margin: 20px">
+              <p style="font-size: 24px"><b>{{ listing[0] }}</b></p>
+              <p style="font-size: 18px"><b>Company: </b>{{ listing[1] }}</p>
+              <p style="font-size: 18px"><b>Location: </b>{{ listing[2] }}</p>
+                {% if listing[3]|length > 2 %} 
+                  <p style="font-size: 18px"><b>Salary: </b>{{ listing[3] }}</p> 
+                {% else %} 
+                  <p style="font-size: 18px"><b>Salary: </b>N/A</p> 
+                {% endif %}
+              <p style="font-size: 18px"><b>Posted: </b>{{ listing[4] }}</p>
+              <a style="font-size: 18px" href="{{ listing[7] }}">Listing URL</a>
+          </div>
+          {% endfor %}
+      </div>
+      {% endblock %}
+    </div>
+  </section>
+  </body>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Tokyo Job Scraper</strong> by <a href="https://github.com/yadonoya">Matthew Schreiber</a>.
+      </p>
+    </div>
+  </footer>
+</html>
